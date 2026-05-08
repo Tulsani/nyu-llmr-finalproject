@@ -1,0 +1,49 @@
+============================================================
+  Distribution Analysis: Clean vs Noisy Questions
+============================================================
+  Pairs analysed: 1000
+
+── 1. Lexical Distance ──────────────────────────────────────
+  Word-level edit distance
+    Mean   : 0.734  (0=identical, 1=fully different)
+    Median : 0.760
+    >0.1   : 100.0% of pairs
+    >0.3   : 99.0% of pairs
+  Jaccard word-set similarity
+    Mean   : 0.290  (1=identical sets)
+    <0.7   : 99.0% of pairs
+  New tokens introduced by noise
+    Mean fraction of noisy tokens not in clean: 0.570
+  Question length
+    Clean  : 45.5 ± 17.0 words
+    Noisy  : 210.6 ± 696.5 words
+    Delta  : +165.1 words on average
+
+── 2. TF-IDF Surface Similarity ────────────────────────────
+  Clean↔Noisy cosine  : 0.635 ± 0.159
+  Clean↔Clean baseline: 0.032 ± 0.031
+  Distribution gap    : -0.603
+  Interpretation      : Surface-level shift is minor
+
+── 3. Base LM Perplexity ────────────────────────────────────
+  Clean PPL  : 1.22 ± 0.12
+  Noisy PPL  : 18.28 ± 12.07
+  PPL ratio  : 14.98x
+  Interpretation: Noisy questions are OOD for the base LM (ratio > 1.2)
+
+── 4. Frozen Model Embedding Distance (layer 18) ────────────
+  Clean↔Noisy cosine  : 0.6150 ± 0.2610
+  Clean↔Clean baseline: 0.9023 ± 0.0312
+  Embedding gap       : 0.2873
+  Interpretation      : Noise shifts hidden representations significantly
+
+── Conclusion ───────────────────────────────────────────────
+  The above metrics jointly show whether the noisy variants
+  represent a genuinely different input distribution.
+  A high edit distance + low Jaccard + high PPL ratio +
+  large embedding gap together explain why the trained model
+  gains on noisy accuracy but may regress on clean accuracy:
+  the noise perturbations push inputs far enough off the
+  clean distribution that learning to handle them requires
+  the model to change in ways that affect clean performance.
+============================================================
